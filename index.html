@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Hello World!</title>
+      <base href="./">
+    </head>
+    <body>
+      <button  data-jy-pc="pc.html" onclick="changeView(this)">PC</button>
+      <button  data-jy-pc="test.html" onclick="changeView(this)">test</button>
+      <br/>
+      <br/>
+      <!-- <button  data-jy-pc="webDriver.html" onclick="pack(this)">package</button> -->
+    </body>
+  </html>
+  <script>
+  const {ipcRenderer} = require('electron')
+
+function changeView(e){
+  let _path = './src/view/' + e.dataset.jyPc
+  ipcRenderer.send('viewChange',_path)
+}
+
+function pack(e){
+  let _path = './src/view/' + e.dataset.jyPc
+  ipcRenderer.send('packtest',_path)
+}
+
+ipcRenderer.on('ok',()=>{
+  console.log('ok')
+})
+
+</script>

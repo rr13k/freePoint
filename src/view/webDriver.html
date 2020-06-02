@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Hello World!</title>
+    </head>
+    <body>
+      <webview id="foo" src="https://www.baidu.com/" style="display:inline-flex; width:100%; height:980px" preload="../model/test" nodeintegration  disablewebsecurity autosize="on"></webview>
+       
+    </body>
+  </html>
+  <script>
+  const webview = document.querySelector('webview')
+  
+  var ipc = require('electron').ipcRenderer;
+    window.CMDList = []
+    window.WB =  webview
+    webview.addEventListener('dom-ready', () => {
+    webview.openDevTools()
+    })
+
+    ipc.on('openURL', (event, arg) => {
+    window.MYURL = arg
+    foo.setAttribute('src',window.MYURL)  //打开指定url
+    })
+  </script>

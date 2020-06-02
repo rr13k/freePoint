@@ -1,0 +1,35 @@
+{
+  "name": "jde",
+  "version": "0.1.0",
+  "main": "./main.js",
+  "build": {
+    "appId": "com.zy.app",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    }
+  },
+  "scripts": {
+    "dev": "electron .",
+    "dist": "electron-builder --win --x64",
+    "package": "electron-packager  --asar  --ignore=node_modules/ . app --win --out presenterTool --arch=x64   --overwrite "
+  },
+  "devDependencies": {
+    "electron": "^4.1.0",
+    "electron-builder": "^20.28.4",
+    "electron-packager": "^12.2.0",
+    "electron-rebuild": "^1.8.2",
+    "lowdb": "^1.0.0"
+  },
+  "dependencies": {
+    "sqlite3": "^4.0.2"
+  }
+}

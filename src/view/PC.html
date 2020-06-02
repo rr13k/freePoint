@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>PC</title>
+  <link rel="stylesheet" href="../assets/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="../assets/icomoon/style.css">
+  <script src="../bin/vue.js"></script>
+  <!-- <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script> -->
+</head>
+</head>
+
+<body >
+  <input type="checkbox" id="liveWin">
+  <div id="liveSet" style="visibility: hidden;">
+    <div>
+      <label for="liveWin" style="float: right; padding: 5px;">
+        <i class="icon-cross"></i>
+      </label>
+    </div>
+    <h3>运行配置</h3>
+    <input style="width: 70%;" id="urlVal" placeholder="http://" class="myInput" value="" />
+    <ul class="urlList">
+      <li onclick="setUrlVal(this)">
+        <span>http://www.baidu.com</span>
+      </li>
+      <li onclick="setUrlVal(this)">
+        <span>http://www.jd.com</span>
+      </li>
+    </ul>
+    <button style="background-color: #d4d4d4;" onclick="startLive()">开始录制</button>
+  </div>
+
+  <div class="container-fluid" >
+    <div class="row">
+      <div class="col-xs-12  tools">
+        <ul class="toolsUl ">
+          <li onclick="backHome()" title="返回">
+            <span class="icon-home"
+              style="color: rgb(22, 109, 223) !important;font-size: 18px;line-height: 30px;font-weight: 600"></span>
+          </li>
+          <li title="录制">
+            <label for="liveWin">
+              <span class="icon-dkw_"
+                style="color: rgb(231, 85, 85) !important;font-size: 20px;line-height: 30px;font-weight: 600"></span>
+            </label>
+          </li>
+          <li onclick="butClick()" title="图表">
+            <span class="icon-stats-bars"
+              style="color: rgb(59, 230, 130) !important;font-size: 20px;line-height: 30px;font-weight: 600"></span>
+          </li>
+          <li onclick="butClick()" title="刷新">
+            <span class="icon-spinner11" onclick="F5()"
+              style="color: rgb(56, 56, 56) !important;font-size: 20px;line-height: 30px;font-weight: 600"></span>
+          </li>
+          <li onclick="butClick()" title="设置">
+            <span class="icon-cog"
+              style="color: rgb(59, 59, 59) !important;font-size: 20px;line-height: 30px;font-weight: 600"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row bodyBox" id="vue_det">
+      <div class="col-md-2 hidden-xs treeBox">
+      </div>
+      <div class="col-xs-12  col-md-10  clearMargin">
+        <div class="col-xs-12 clearMargin dataBox">
+          <table border="1" id="casesTable" cellpadding="10" width="100%" class="biaoge">
+            <tr>
+              <th width="8%">id</th>
+              <th>用例名称</th>
+              <th>成功率</th>
+              <th>操作</th>
+            </tr>
+            <tr v-for="i in table">
+                <td>{{i.name}}</td>
+                <td>{{i.label}}</td>
+                <td>-</td>
+                <td>
+                  <ul class="btnBox">
+                    <li  >
+                     <button type="button" @click="runCase(i)" >run</button>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+          </table>
+        </div>
+        <div class="col-xs-12  cmdShow">执行显示区域</div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script>
+  var ipc = require('electron').ipcRenderer;
+  const common = require('../model/common');
+  var lowdb = require('./lowdb.js')
+  var db = new lowdb.lowdb
+  var mydb = db.getdb
+  var casaTableId = null
+  var cmdList = []
+  var liveUrl = ''
+
+  var data = {
+    newTodoText: '',
+    visitCount: 0,
+    hideCompletedTodos: false,
+    todos: [],
+    msg:'测试vue',
+    table:[],
+    error: null
+  }
+
+  var vm = new Vue({ //vue 配置
+    el: '#vue_det',
+    data: data,
+    mounted:()=>{
+      console.log("vue:初始化")
+      //table = db.getCaseData(id)
+      //console.log(table)
+    },
+    methods:{
+      runCase(data) {
+        console.log("运行case", data)
+        let obj = {
+          type: common.START_TYPE.RUNCASE,
+          url: data.url
+        }
+        ipc.send('openBrowser', obj)
+        'https://cs.jdfmgt.net/shterm/login#/business/resourceaccess'
+      }
+    }
+  })
+
+  console.log("执行了这个VUE")
+
+  var randomNum = { //用于生成不会重复的数
+    value: 0,
+    get val() {
+      this.value++
+      return this.value
+    }
+  }
+
+  ipc.on('CmdList', (event, arg) => {
+    cmdList.push(arg)
+  })
+  ipc.on('BrowserClosed', (event, arg) => { //保存用例
+    db.saveCase(cmdList, liveUrl, casaTableId)
+    cmdList = []
+    CaseTable(casaTableId)
+  })
+
+  function F5() {
+    treeinit()
+  }
+
+  treeinit()
+
+  function treeinit() {
+    let data = db.initProjectData()
+    renderTree(data)
+  }
+
+  let sdd = db.test()
+  console.log(sdd)
+
+  let treeBox = document.getElementsByClassName('treeBox')[0]
+  treeBox.onmousedown = function (e) {
+    var {
+      ipcRenderer
+    } = require('electron')
+    var {
+      remote
+    } = require('electron')
+    var {
+      Menu,
+      MenuItem
+    } = remote
+    var menu = new Menu()
+    menu.append(new MenuItem({
+      label: '新建项目',
+      click() {
+        db.addInitProject()
+        treeinit()
+      }
+    }))
+    var e = event || window.event;
+    let nType = e.button;
+    if (2 === nType) { //点击鼠标右键
+      menu.popup({
+        window: remote.getCurrentWindow()
+      })
+    }
+    e.stopPropagation();
+  }
+
+  function butClick(e) {
+    console.log('你点击了按钮')
+  }
+
+  function startLive() { // 启动开始录制脚本
+    let val = document.getElementById('urlVal').value
+    console.dir(casaTableId)
+    if (val == '' || casaTableId == null) {
+      alert('请选择用例集并填写测试网址!')
+      return false
+    }
+    liveUrl = val
+    let obj = {
+      type: common.START_TYPE.LIVE,
+      url: val
+    }
+    ipc.send('openBrowser', obj)
+    document.getElementById('liveWin').checked = false
+  }
+
+  function setUrlVal(e) {
+    urlVal = document.getElementById('urlVal')
+    urlVal.value = e.innerText
+  }
+
+  function renderChildTree(dom, list, beark = false, exception = false) {
+    if (dom.parentNode.parentNode.className.indexOf('main-tree') > -1) {
+      isTrue = dom.previousSibling.previousSibling.checked
+      _name = dom.previousSibling.previousSibling.name
+      let data = db.initProjectData()
+      let headsDom = renderTree(data, false, true)
+      treeBox.innerHTML = headsDom
+      let nameDom = document.getElementsByName(_name)[0]
+      nameDomfathcr = nameDom.parentNode
+      let _ul = document.createElement('ul')
+      _ul.innerHTML = TreeRecursion(list)
+      for (var o = _ul.children.length - 1; o >= 0; o--) {
+        nameDomfathcr.appendChild(_ul.children[0]) //修改为O则最新的在最前方
+      }
+      if (!isTrue || exception) {
+        document.getElementsByName(_name)[0].checked = true
+      }
+    } else {
+      isTrue = dom.previousSibling.previousSibling.checked
+      _name = dom.previousSibling.previousSibling.name
+      let _logUl = dom.parentNode.parentNode
+      let _str = dom.dataset.tree.replace(/\~/g, '"')
+      _str = JSON.parse(_str)
+      let _ul = document.createElement('ul')
+      _Str = TreeRecursion([_str], false, true) + TreeRecursion(list, false) + '</li>'
+      _logUl.innerHTML = _Str
+      if (!isTrue || exception) {
+        document.getElementsByName(_name)[0].checked = true
+      }
+
+    }
+  }
+
+  function backTree(obj) { //按不同的类型生成不同的展示数据
+    switch (obj.type) {
+      case "cases":
+        casaTableId = obj.id
+        vm.table = db.getCaseData(id) //获取列表数据
+        break
+      case "requestHd":
+        break
+      default:
+        return false
+    }
+  }
+
+  function treeClick(dom) {
+    var _e = event || window.event;
+    let _str = dom.dataset.tree.replace(/\~/g, '"')
+    _str = JSON.parse(_str)
+    let dataChild = db.getProjectChild(_str.id)
+    if (0 == _e.button) { //左键
+      if (_str.type == "cases" || _str.type == "projects") {
+        renderChildTree(dom, dataChild)
+      }
+      backTree(_str)
+    }
+    if (2 === _e.button) { //点击鼠标右键
+      _handleNodeClick(dom, _str)
+      console.log(270)
+    }
+    _e.stopPropagation();
+  }
+
+  function _handleNodeClick(dom, data, node) { //左侧栏,右键点击树形图,4个参数分别为event、data、node、dom
+    var {
+      remote
+    } = require('electron')
+    var {
+      Menu,
+      MenuItem
+    } = remote
+    var menu = new Menu()
+    switch (data.type) {
+      case "projects":
+        if (true) {
+          menu.append(new MenuItem({
+            label: '新建子目录',
+            click() {
+              var addDate = db.addInitProject(data.id)
+              let dataChild = db.getProjectChild(data.id)
+              renderChildTree(dom, dataChild, true, true)
+            }
+          }))
+        }
+        menu.append(new MenuItem({
+          label: '新建cases集',
+          click() {
+            db.addInitCase(data.id)
+            let dataChild = db.getProjectChild(data.id)
+            renderChildTree(dom, dataChild, true, true)
+          }
+        }))
+
+        menu.append(new MenuItem({
+          label: '重命名',
+          click() {
+            data.label = "rename"
+            self.renameDom = data
+            self.ReName(event.path[0].offsetLeft, event.path[0].offsetTop + 90, event.path[0].clientWidth, event
+              .path[0].clientHeight)
+            window.MYDB.get('projects')
+              .write()
+          }
+        }))
+
+        menu.append(new MenuItem({
+          label: 'Delete',
+          click() {
+            var parent = node.parent;
+            var children = parent.data.children || parent.data;
+            var _index = self.projectData.findIndex(d => d.id == data.id);
+            children.splice(_index, 1);
+            window.MYDB.get('projects')
+              .write()
+            self.reload()
+            // self.initProjectData()
+          }
+        }))
+        break;
+
+      case "cases":
+        menu.append(new MenuItem({
+          label: '添加cookie',
+          click() {
+            db.addInitCookie(data.id)
+            let dataChild = db.getProjectChild(data.id)
+            renderChildTree(dom, dataChild, true)
+          }
+        }))
+
+        menu.append(new MenuItem({
+          label: '重命名',
+          click() {
+            data.label = "rename"
+            self.renameDom = data
+            self.ReName(event.path[0].offsetLeft, event.path[0].offsetTop + 90, event.path[0].clientWidth, event
+              .path[0].clientHeight)
+            window.MYDB.get('projects')
+              .write()
+          }
+        }))
+        menu.append(new MenuItem({
+          label: 'Delete',
+          click() {
+            db.deleteProjects(data.id)
+            // let dataChild = db.getProjectChild(data.id)
+            // renderChildTree(dom, dataChild,true)           
+          }
+        }))
+        break;
+      case "requestHd":
+        menu.append(new MenuItem({
+          label: 'Delete',
+          click() {
+            var parent = node.parent;
+            var children = parent.data.children || parent.data;
+            var _index = self.projectData.findIndex(d => d.id == data.id);
+            children.splice(_index, 1); //error
+            window.MYDB.get('projects')
+              .write()
+            self.reload()
+          }
+        }))
+      default:
+        break;
+    }
+
+    menu.popup({
+      window: remote.getCurrentWindow()
+    })
+  }
+
+  function backHome() {
+    ipc.send('backHome')
+  }
+
+  function TreeRecursion(list, frist = '', treeShander = false) {
+    var dom = ""
+    let type = ''
+    if (frist) {
+      frist = 'main-tree'
+    }
+    for (var i = 0; i < list.length; i++) {
+      let cont = JSON.stringify(list[i])
+      cont = cont.replace(/\"/g, '~')
+      if (list[i].type == 'projects') {
+        if (!treeShander) {
+          dom = dom + `<ul  class="pure-tree ${frist}">
+              <li>
+                 <input type="checkbox" name="${list[i].id}" id="trigger-${randomNum.val}">
+                 <label  data-tree="${cont}"  onmousedown="treeClick(this)" for="trigger-${randomNum.value}">${list[i].label}</label>
+               </li></ul> `
+        } else {
+          dom = dom + `<li>
+                 <input type="checkbox" name="${list[i].id}" id="trigger-${randomNum.val}">
+                 <label  data-tree="${cont}"  onmousedown="treeClick(this)" for="trigger-${randomNum.value}">${list[i].label}</label>
+               `
+        }
+      } else if (list[i].type == 'cases') {
+        type = 'icon-case'
+        if (!treeShander) {
+          dom = dom + `<ul  class="pure-tree">
+              <li>
+                 <input type="checkbox"  name="${list[i].id}" id="trigger-${randomNum.val}">
+                 <label class="${type}" data-tree="${cont}"  onmousedown="treeClick(this)" for="trigger-${randomNum.value}">${list[i].label}</label>
+               </li></ul>
+               `
+        } else {
+          dom = dom + `
+              <li>
+                 <input type="checkbox"  name="${list[i].id}" id="trigger-${randomNum.val}">
+                 <label class="${type}" data-tree="${cont}"  onmousedown="treeClick(this)" for="trigger-${randomNum.value}">${list[i].label}</label>
+               `
+        }
+
+      } else if (list[i].type == 'requestHd') {
+        type = 'icon-cookie'
+        dom = dom + ` <ul class="pure-tree">
+                  <li class="pure-tree_link">
+                <a  class="${type}" title="${list[i].label}" onmousedown="treeClick(this)" data-tree="${cont}"  href="javascript:;" >${list[i].label}</a>
+              </li></ul>`
+      }
+
+    }
+    return dom
+  }
+
+  function renderTree(treeList, insert = true, treeShander) {
+    var myStr = ''
+    var first = true
+    var treeBox = document.getElementsByClassName('treeBox')[0]
+    if (!insert) {
+      return TreeRecursion(treeList, true)
+    }
+    treeBox.innerHTML = TreeRecursion(treeList, true, treeShander)
+  }
+</script>
+
+
+<style>
+  * {
+    font-family: "Hiragino Sans GB", "Microsoft YaHei", "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+
+  #liveWin:checked+#liveSet {
+    visibility: unset !important;
+
+  }
+
+  #liveSet {
+    text-align: center;
+    position: fixed;
+    margin: auto auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 5;
+    width: 30%;
+    min-width: 350px;
+    min-height: 400px;
+    height: 50%;
+    background-color: #b3bedd;
+    opacity: 1;
+  }
+
+  .cmdShow {
+    color: #B0B9C5;
+  }
+
+  .toolsUl>li:hover {
+    background-color: #2b5876c9;
+  }
+
+  .toolsUl>li {
+    user-select: none;
+    background-color: #2b587677;
+    display: inline-block;
+    /* padding: 5px; */
+    margin: 5px 0;
+    width: 30px;
+    height: 30px;
+    /* margin-left: -10px; */
+    text-align: center;
+    vertical-align: text-top;
+    border-radius: 10%;
+  }
+
+  .urlList {
+    background-color: #99a9d6;
+    margin: 0 10px;
+    height: 60%;
+    margin: 10px 0;
+  }
+
+  .bodyBox {
+    position: absolute;
+    top: 40px;
+    bottom: 0px;
+    width: 100%;
+  }
+
+
+  .clearMargin {
+    padding: 0;
+    margin: 0;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+  .clearfix {
+    zoom: 1;
+  }
+
+  ul,
+  li {
+    list-style: none;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  .myInput {
+    border-radius: 3px;
+    display: inline-block;
+    padding: 7px 0px;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+  }
+
+  .myInput:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
+  }
+
+  .icoBtn {
+    display: inline-block;
+    padding: 0 5px;
+    font-size: 0;
+  }
+
+  .treeBox {
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-right: rgba(233, 233, 233, 0.521) solid 1px;
+  }
+
+  .dataBox {
+    height: 80vh;
+    border-bottom: rgba(233, 233, 233, 0.521) solid 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .icoBtn:hover {
+    animation: bounce 1s;
+  }
+
+
+  @keyframes bounce {
+
+    from,
+    20%,
+    53%,
+    80%,
+    to {
+      animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+      transform: translate3d(0, 0, 0);
+    }
+
+    40%,
+    43% {
+      animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+      transform: translate3d(0, -10px, 0);
+    }
+
+    70% {
+      animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+      transform: translate3d(0, -3px, 0);
+    }
+
+    90% {
+      transform: translate3d(0, -1px, 0);
+    }
+  }
+
+
+
+
+  th {
+    text-align: center;
+    /* color: rgb(255, 104, 104); */
+    color: white;
+    font-size: 14px;
+    font-weight: 100;
+    border: none;
+    padding: 5px 0;
+  }
+
+  .tools {
+    min-width: 200px;
+    /* height: 5vh; */
+    background-color: rgba(255, 255, 255, 0.2);
+    border-bottom: rgba(233, 233, 233, 0.521) solid 1px;
+  }
+
+  body {
+    background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+
+    height: 100vh;
+  }
+
+  .urlList>li {
+    border-bottom: #B0B9C5 solid 1px;
+  }
+
+  .urlList>li:hover {
+    background-color: #7c9dff;
+  }
+
+
+  input {
+    display: none;
+  }
+
+  td {
+    color: rgb(39, 118, 223);
+    border: none;
+    border-bottom: rgba(233, 233, 233, 0.521) solid 1px;
+    padding: 5px 0;
+  }
+
+  table {
+    background-color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    border: rgba(233, 233, 233, 0.521) solid 1px;
+    user-select: none;
+  }
+
+  .textBtn {
+    border: 0;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0)
+  }
+
+  .textBtn:hover {
+    background-color: rgb(200, 226, 218);
+    border-radius: 20%;
+  }
+
+  [class*="fa-"]:before {
+    font-family: 'FontAwesome', sans-serif;
+  }
+
+  .pure-tree {
+    text-align: left;
+    display: block;
+  }
+
+  .pure-tree.main-tree {
+    width: 100%;
+    display: inline-block;
+  }
+
+  .pure-tree:not(.main-tree) {
+    padding-left: 1.2em;
+  }
+
+  .pure-tree:not(.main-tree) li {
+    overflow: hidden;
+    height: 0;
+    display: block;
+  }
+
+  .pure-tree label {
+    display: block;
+    cursor: pointer;
+    color: rgb(209, 209, 209);
+    border-bottom: 1px dashed #B0B9C5;
+    padding: 0.5em 0.5em 1.125em 0;
+  }
+
+  .pure-tree label:before {
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
+    display: inline-block;
+    font-family: 'icomoon', sans-serif;
+    content: "\e92f";
+    padding-right: 1.4em;
+  }
+
+  .pure-tree label:hover {
+    color: white;
+    border-bottom-color: #434a58;
+  }
+
+  .pure-tree .pure-tree_link a {
+    padding: 0.80em 1.125em 0.750em 0;
+    display: block;
+    border-radius: .2em;
+    color: rgb(209, 209, 209);
+    text-decoration: none;
+  }
+
+  .pure-tree .pure-tree_link a:hover {
+    color: white;
+  }
+
+  .pure-tree.nested {
+    padding-left: 1.7em;
+  }
+
+  .pure-tree [type="checkbox"] {
+    display: none;
+  }
+
+  .pure-tree [type="checkbox"]:checkeded+label {
+    color: white;
+    border-bottom-color: #434a58;
+  }
+
+  .pure-tree [type="checkbox"]:checked~ul>li {
+    height: auto;
+  }
+
+
+  @font-face {
+    font-family: 'icomoon';
+    src: url('../assets/icomoon/fonts/icomoon.eot?gdke1x');
+    src: url('../assets/icomoon/fonts/icomoon.eot?gdke1x#iefix') format('embedded-opentype'),
+      url('../assets/icomoon/fonts/icomoon.ttf?gdke1x') format('truetype'),
+      url('../assets/icomoon/fonts/icomoon.woff?gdke1x') format('woff'),
+      url('../assets/icomoon/fonts/icomoon.svg?gdke1x#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  [class^="icon-"],
+  [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .icon-case:before {
+    content: "\e900" !important;
+  }
+
+  .icon-cookie:before {
+    content: "\e901" !important;
+    padding-right: 0.5em;
+  }
+
+  .icon-folder:before {
+    content: "\e92f" !important;
+    padding-right: 0.5em;
+  }
+</style>

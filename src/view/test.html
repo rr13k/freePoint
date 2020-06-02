@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Hello World!</title>
+    </head>
+    <body>
+      <h3>这是一个测试页面!</h3>
+    </body>
+  </html>
+  <script>
+    // var sqlite3 = require('sqlite3');
+// var db = new sqlite3.Database('WebFiles.db');
+async = require('async')
+
+db = require('lowdb')
+      var {lowdb} = require('lowdb')
+        var FileSync = require('lowdb/adapters/FileSync');  // 有多种适配器可选择
+        var adapter = new FileSync('db.json'); // 申明一个适配器
+        lowdb = lowdb(adapter)  // 以上初始化数据库
+        lowdb.defaults({projects:[],projectsConts:0,casesConts:0,cases:[]}).write(); //初始化数据表格
+  </script>

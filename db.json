@@ -1,0 +1,293 @@
+{
+  "projects": [
+    {
+      "label": "文件374",
+      "type": "projects",
+      "father": false,
+      "children": [],
+      "id": 374
+    },
+    {
+      "label": "文件924",
+      "type": "projects",
+      "father": 374,
+      "children": [],
+      "id": 924
+    },
+    {
+      "label": "用例集",
+      "type": "cases",
+      "father": 924,
+      "children": [],
+      "id": 1010
+    }
+  ],
+  "projectsConts": 1051,
+  "casesConts": 8,
+  "cases": [
+    {
+      "id": 3,
+      "label": "new case",
+      "caseCMD": [
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"head\"]/div[1]/div[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "inputToData",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": "asdasd"
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"head\"]/div[1]/div[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "inputToData",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": "asdasdsdasd"
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"head\"]/div[1]/div[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"su\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        }
+      ],
+      "testURL": "http://www.baidu.com",
+      "project": 925,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    },
+    {
+      "id": 4,
+      "label": "new case",
+      "caseCMD": [
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"head\"]/div[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "inputToData",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": "sdadsa"
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"head\"]/div[1]/div[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        }
+      ],
+      "testURL": "http://www.baidu.com",
+      "project": 925,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    },
+    {
+      "id": 5,
+      "label": "new case",
+      "caseCMD": [
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"head\"]/div[1]/div[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"form\"]/span[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "inputToData",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": "asdasd"
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"head\"]/div[1]/div[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        }
+      ],
+      "testURL": "http://www.baidu.com",
+      "project": 925,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    },
+    {
+      "id": 6,
+      "label": "new case",
+      "caseCMD": [
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"head_wrapper\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "inputToData",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": "碧城傻逼"
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"su\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        }
+      ],
+      "testURL": "http://www.baidu.com",
+      "project": 1010,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    },
+    {
+      "id": 7,
+      "label": "new case",
+      "caseCMD": [],
+      "testURL": "http://www.baidu.com",
+      "project": 1010,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    },
+    {
+      "id": 8,
+      "label": "new case",
+      "caseCMD": [],
+      "testURL": "",
+      "project": 1010,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    }
+  ]
+}
