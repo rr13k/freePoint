@@ -3,9 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
+
   <title>PC</title>
   <link rel="stylesheet" href="../assets/bootstrap.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="../assets/icomoon/style.css">
+  <link rel="stylesheet" href="../assets/font/iconfont.css">
   <script src="../bin/vue.js"></script>
   <!-- <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script> -->
 </head>
@@ -81,7 +83,10 @@
                 <td>
                   <ul class="btnBox">
                     <li  >
-                     <button type="button" @click="runCase(i)" >run</button>
+                     <i class="iconfont iconrunning" @click="runCase(i)" title="运行" ></i>
+                     <i class="iconfont iconbianji" @click="pass(i)" title="编辑" ></i>
+                     <i class="iconfont iconshezhi" @click="pass(i)" title="配置" ></i>
+                     <i class="iconfont iconshanchu" @click="pass(i)" title="删除" ></i>
                     </li>
                   </ul>
                 </td>
@@ -125,14 +130,19 @@
       //console.log(table)
     },
     methods:{
-      runCase(data) {
-        console.log("运行case", data)
-        let obj = {
+      runCase(data) { // 执行case
+        console.log("runing of case info:", data)
+        let config = {
           type: common.START_TYPE.RUNCASE,
-          url: data.url
+          url: data.testURL,
+          caseCMD:data.caseCMD
         }
-        ipc.send('openBrowser', obj)
+        console.log(data)
+        ipc.send('openBrowser', config)
         'https://cs.jdfmgt.net/shterm/login#/business/resourceaccess'
+      },
+      pass(){
+
       }
     }
   })
@@ -147,13 +157,16 @@
     }
   }
 
-  ipc.on('CmdList', (event, arg) => {
+  ipc.on('CmdList', (event, arg) => { // 动态显示收到的命令
     cmdList.push(arg)
   })
+
   ipc.on('BrowserClosed', (event, arg) => { //保存用例
-    db.saveCase(cmdList, liveUrl, casaTableId)
-    cmdList = []
-    CaseTable(casaTableId)
+    if(arg != common.START_TYPE.RUNCASE){ //执行时不保存
+      db.saveCase(cmdList, liveUrl, casaTableId)
+      cmdList = []
+      CaseTable(casaTableId)
+    }
   })
 
   function F5() {
@@ -212,11 +225,11 @@
       return false
     }
     liveUrl = val
-    let obj = {
+    let config = {
       type: common.START_TYPE.LIVE,
       url: val
     }
-    ipc.send('openBrowser', obj)
+    ipc.send('openBrowser', config)
     document.getElementById('liveWin').checked = false
   }
 
@@ -262,7 +275,7 @@
     switch (obj.type) {
       case "cases":
         casaTableId = obj.id
-        vm.table = db.getCaseData(id) //获取列表数据
+        vm.table = db.getCaseData(casaTableId) //获取列表数据
         break
       case "requestHd":
         break
@@ -665,7 +678,6 @@
   }
 
   td {
-    color: rgb(39, 118, 223);
     border: none;
     border-bottom: rgba(233, 233, 233, 0.521) solid 1px;
     padding: 5px 0;

@@ -1,26 +1,153 @@
 <!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Hello World!</title>
-    </head>
-    <body>
-      <webview id="foo" src="https://www.baidu.com/" style="display:inline-flex; width:100%; height:980px" preload="../model/test" nodeintegration  disablewebsecurity autosize="on"></webview>
-       
-    </body>
-  </html>
-  <script>
-  const webview = document.querySelector('webview')
-  
-  var ipc = require('electron').ipcRenderer;
-    window.CMDList = []
-    window.WB =  webview
-    webview.addEventListener('dom-ready', () => {
-    webview.openDevTools()
-    })
+<html>
 
-    ipc.on('openURL', (event, arg) => {
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World!</title>
+</head>
+
+<body>
+  <webview id="foo" src="https://www.baidu.com/" style="display:inline-flex; width:100%; height:980px"
+    preload="../model/test" nodeintegration disablewebsecurity autosize="on"></webview>
+
+</body>
+
+</html>
+<script>
+  const webview = document.querySelector('webview')
+
+  var ipc = require('electron').ipcRenderer;
+  window.CMDList = []
+  window.WB = webview
+  webview.addEventListener('dom-ready', () => {
+     //webview.openDevTools()  //开启webiew调试
+  })
+
+  ipc.on('openURL', (event, arg) => {
     window.MYURL = arg
-    foo.setAttribute('src',window.MYURL)  //打开指定url
-    })
-  </script>
+    foo.setAttribute('src', window.MYURL) //打开指定url
+  })
+
+  ipc.on('CMDLIST', (event, arg) => {
+    var _str = ""
+    console.log("收到的命令列表",JSON.stringify(arg))
+    /*
+    if(arg.childList){
+        for(var a=0;a<arg.childList.length;a++){
+            if(arg.childList[a].type == "requestHd"){
+                for(var e=0;e<arg.childList[a].data.length;e++){
+                    console.dir(arg.childList[a].data[e].name)
+                    if(!arg.childList[a].data[e].path){
+                        arg.childList[a].data[e].path = '/'
+                    }
+                    if(!arg.childList[a].data[e].domain){
+                        let domain = ""
+                    }else{
+                        domain = arg.childList[a].data[e].domain
+                    }
+                        WB.executeJavaScript(`
+                                var cookie = { url : "http://`+ domain +`", name : "`+ arg.childList[a].data[e].name +`", value : "`+ arg.childList[a].data[e].value +`",path:"`+ arg.childList[a].data[e].path +`" };
+                                setTimeout(function(){
+                                    console.log(cookie)
+                                },800)
+                                _session.defaultSession.cookies.set(cookie, function(error) {
+                                    if (error)
+                                    console.error(error);
+                                });
+                            `)
+                }
+            }
+        }
+    }
+    */
+    setTimeout(function(){
+        OnRunCMD(null,arg)
+    },800)
+})
+
+function OnRunCMD(_i, arg){
+    var i
+    if(_i == null){
+        i =0
+    }else{
+        i = _i
+    }
+    for(i;i<arg.caseCMD.length;i++){
+            var _ysu = arg.caseCMD[i];
+        if(_ysu.type == 'js'){
+            switch (_ysu.describe){
+                case "click":
+                    if(_ysu.iframe != null){
+                        WB.executeJavaScript(`
+                        var RunDistrict = document.getElementsByTagName("iframe")[`+ _ysu.iframe +`].contentWindow.document
+                        if(_x(\'`+ _ysu.dom +`\',RunDistrict)[0]){
+                            _x(\'`+ _ysu.dom +`\',RunDistrict)[0].click()
+                        }`)
+                    }else{
+                        WB.executeJavaScript(`
+                        if(_x(\'`+ _ysu.dom +`\')[0]){
+                            console.dir(_x(\'`+ _ysu.dom +`\')[0])
+                            _x(\'`+ _ysu.dom +`\')[0].click()
+
+                        }`)
+                    }
+                    break;
+                case "inputToData":
+                    if(_ysu.iframe != null){
+                        WB.executeJavaScript(`
+                        var RunDistrict = document.getElementsByTagName("iframe")[`+ _ysu.iframe +`].contentWindow.document
+                        var inputdom = _x(\'`+ _ysu.dom +`\',RunDistrict)[0]
+                        window.TI = inputdom
+                        inputdom.value =  "`+_ysu.value+`"
+                        inputdom.focus()
+                         `)
+                    }else{
+                        WB.executeJavaScript(`
+                        var inputdom = _x(\'`+ _ysu.dom +`\')[0]
+                        window.TI = inputdom
+                        inputdom.value =  "`+_ysu.value+`"
+                        inputdom.focus()
+                         `)
+                    }
+                    break;
+                case "sleep":
+                    _i = i+1
+                    setTimeout(() => {
+                        OnRunCMD(_i, arg)
+                    }, _ysu.value);
+                    return false
+            }
+        }else if(_ysu.type == 'py'){
+            var xmlhttp =new XMLHttpRequest();
+            var prot =  8871
+            var url = "http://localhost:"+ prot + "/" + _ysu.describe
+            let state = ((_path)=>{
+                stateList1 =  ["click","move","rightClick"]
+                stateList2 =  ["error","getPosition","baoliu"]
+                stateList3 =  ["setValue"]
+                if(stateList1.indexOf(_path) > -1)
+                {
+                    return 1
+                }else if(stateList2.indexOf(_path) > -1){
+                    return null
+                }else if(stateList3.indexOf(_path) > -1){
+                    return 3
+                }
+            })(_ysu.describe)
+
+            switch(state){
+                case 1:
+                    url = url + "?x=" + _ysu.x +"&y=" + _ysu.y
+                    break;
+                case 3:
+                    url = url + "?x=" + _ysu.x +"&y=" + _ysu.y + "&value=" + _ysu.value
+                    console.log(url)
+                default:  //default 为执行空参数的命令,并不是什么都不做 - -
+                    break;
+            }
+            xmlhttp.open("GET",url,true);
+            xmlhttp.send();
+        }
+     }
+}
+</script>

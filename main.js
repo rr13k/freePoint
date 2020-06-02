@@ -15,11 +15,8 @@ function createWindow() {
     height: 600
   })
   win.loadFile('index.html')
-
-  win.webContents.openDevTools()
-
+  win.webContents.openDevTools()  // 主窗口打开调试
   win.on('closed', () => {
-
     win = null
   })
 }
@@ -52,11 +49,13 @@ ipcMain.on('openBrowser', function (event, arg) { //打开浏览器的方法，a
       webSecurity: false
     }
   })
-  driver.openDevTools()
+  // driver.openDevTools() // 附加浏览器调试
   driver.webContents.on('did-attach-webview', () => {
     driver.webContents.send('openURL', arg.url)
-    if (start_type == 2) {
-      driver.webContents.send('CMDLIST', arg.row)
+    console.log("start_type ",start_type)
+    if (start_type == common.START_TYPE.RUNCASE) {
+      console.log("send cmdLIst")
+      driver.webContents.send('CMDLIST', arg)
     }
   })
   var path = require("path")
@@ -87,7 +86,7 @@ ipcMain.on('packtest', (event, arg) => {
     width: 800,
     height: 600
   })
-  webDriver.webContents.openDevTools()
+  //webDriver.webContents.openDevTools() //开启调试
   webDriver.loadFile(arg)
   webDriver.on('closed', () => {
     webDriver = null

@@ -1,0 +1,58 @@
+{
+  "id": "1857647",
+  "name": "freePoint",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "自动化实践",
+  "glyphs": [
+    {
+      "icon_id": "715974",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "1135995",
+      "name": "运行中",
+      "font_class": "running",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "1172728",
+      "name": "编辑",
+      "font_class": "bianji",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "2732023",
+      "name": "录制管理",
+      "font_class": "luzhiguanli",
+      "unicode": "e6a0",
+      "unicode_decimal": 59040
+    },
+    {
+      "icon_id": "4766961",
+      "name": "api",
+      "font_class": "api",
+      "unicode": "e7e1",
+      "unicode_decimal": 59361
+    },
+    {
+      "icon_id": "12686630",
+      "name": "刷新",
+      "font_class": "icon_shuaxin",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "15001650",
+      "name": "我的主页",
+      "font_class": "wodezhuye",
+      "unicode": "e661",
+      "unicode_decimal": 58977
+    }
+  ]
+}

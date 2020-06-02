@@ -22,8 +22,8 @@
       "id": 1010
     }
   ],
-  "projectsConts": 1051,
-  "casesConts": 8,
+  "projectsConts": 1083,
+  "casesConts": 11,
   "cases": [
     {
       "id": 3,
@@ -281,6 +281,77 @@
     },
     {
       "id": 8,
+      "label": "new case",
+      "caseCMD": [],
+      "testURL": "",
+      "project": 1010,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    },
+    {
+      "id": 9,
+      "label": "new case",
+      "caseCMD": [],
+      "testURL": "",
+      "project": 1010,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    },
+    {
+      "id": 10,
+      "label": "new case",
+      "caseCMD": [
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "inputToData",
+          "dom": "//*[@id=\"kw\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": "123123123"
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"su\"]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"s_tab\"]/div[1]/a[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        },
+        {
+          "describe": "click",
+          "dom": "//*[@id=\"s_tab\"]/div[1]/a[1]",
+          "iframe": null,
+          "order": 0,
+          "type": "js",
+          "value": null
+        }
+      ],
+      "testURL": "http://www.baidu.com",
+      "project": 1010,
+      "runNum": 0,
+      "success": 0,
+      "error": 0
+    },
+    {
+      "id": 11,
       "label": "new case",
       "caseCMD": [],
       "testURL": "",
